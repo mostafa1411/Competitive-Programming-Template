@@ -601,3 +601,91 @@ int getCentroid(int u, int p)
     return u;
 }
 ```
+## fast power
+```c++
+ll fastPower(ll base, ll exp, ll mod)
+{
+    ll ans = 1;
+    base %= mod;
+    while (exp)
+    {
+        if (exp & 1)
+            ans = (ans * base) % mod;
+        exp >>= 1;
+        base = (base * base) % mod;
+    }
+    return ans;
+}
+```
+## nCr
+```c++
+ll fact[N];
+ 
+ll fastPower(ll base, ll exp, ll mod)
+{
+    ll ans = 1;
+    base %= mod;
+    while (exp)
+    {
+        if (exp & 1)
+            ans = (ans * base) % mod;
+        exp >>= 1;
+        base = (base * base) % mod;
+    }
+    return ans;
+}
+ 
+ll modInverse(ll x)
+{
+    return fastPower(x, MOD - 2, MOD);
+}
+ 
+ll nCr(ll n, ll r)
+{
+    if (n < r)
+        return 0;
+    if (r == 0)
+        return 1;
+    return (fact[n] * modInverse(fact[r]) % MOD * modInverse(fact[n - r]) % MOD) % MOD;
+}
+
+int main()
+{
+    fact[0] = 1;
+    for (int i = 1; i < N; i++)
+        fact[i] = (fact[i - 1] * i) % MOD;
+}
+```
+## get divisors
+```c++
+vector<int> getDivisors(int x)
+{
+    vector<int> ans;
+    for (int i = 1; i * i <= x; i++)
+        if (x % i == 0)
+        {
+            ans.emplace_back(i);
+            if (i * i != x)
+                ans.emplace_back(x / i);
+        }
+    return ans;
+}
+```
+## prime factors
+```c++
+set<ll> primeFactors(ll n)
+{
+    set<ll> ans;
+    for (ll i = 2; i * i <= n; i++)
+    {
+        while (n % i == 0)
+        {
+            ans.emplace(i);
+            n /= i;
+        }
+    }
+    if (n != 1)
+        ans.emplace(n);
+    return ans;
+}
+```
