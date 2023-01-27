@@ -261,6 +261,66 @@ void myMain()
 ```c++
 
 ```
+## Trie
+```c++
+class Trie {
+private:
+    struct Node {
+        bool isLeaf;
+        Node* child[26];
+    };
+    Node* root;
+
+public:
+    Trie()
+    {
+        root = newNode();
+    }
+
+    Node* newNode()
+    {
+        Node* node = new Node();
+        for (int i = 0; i < 26; i++)
+            node->child[i] = nullptr;
+        node->isLeaf = true;
+        return node;
+    }
+
+    void insert(string& s)
+    {
+        Node* node = root;
+        for (auto& c : s)
+        {
+            if (node->child[c - 'a'] == nullptr)
+            {
+                node->isLeaf = false;
+                node->child[c - 'a'] = newNode();
+            }
+            node = node->child[c - 'a'];
+        }
+    }
+
+    bool find(string& s)
+    {
+        Node* node = root;
+        for (auto& c : s)
+        {
+            if (node->child[c - 'a'] == nullptr)
+                return false;
+            node = node->child[c - 'a'];
+        }
+        return node->isLeaf;
+    }
+
+    bool isPrefix(string& s)
+    {
+        Node* node = root;
+        for (auto& c : s)
+            node = node->child[c - 'a'];
+        return !node->isLeaf;
+    }
+};
+```
 ## Ordered Set
 ```c++
 // policy-based data structures
