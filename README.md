@@ -33,7 +33,7 @@ void myMain()
 
 int main()
 {
-#ifndef ONLINE_JUDGE
+#ifdef LOCAL
     freopen("input.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
 #endif
