@@ -21,7 +21,7 @@ const int dx[] = {0, 0, -1, 1};
 const int dy[] = {-1, 1, 0, 0};
 const int N = 1e5 + 5, M = 1e6 + 5;
 
-void myMain()
+void testCase()
 {
     int n;
     cin >> n;
@@ -41,7 +41,7 @@ int main()
     int t = 1;
     cin >> t;
     while (t--)
-        myMain();
+        testCase();
     return 0;
 }
 ```
@@ -409,48 +409,67 @@ pair<ll, bool> bellman(int src, int dest)
 ```
 ## LCA
 ```c++
-int depth[N], ancestor[N][M];
-vector<int> adj[N];
- 
-void dfs(int u, int p)
-{
-    for (auto& v : adj[u])
+class LCA {
+private:
+    int n, m;
+    vector<int> depth;
+    vector<vector<int>> ancestor;
+
+    void dfs(int u, int p)
     {
-        if (v == p)
-            continue;
-        depth[v] = depth[u] + 1;
-        ancestor[v][0] = u;
-        for (int i = 1; i < M; i++)
-            ancestor[v][i] = ancestor[ancestor[v][i - 1]][i - 1];
-        dfs(v, u);
-    }
-}
- 
-int kth_ancestor(int u, int k)
-{
-    for (int i = 0; i < M; i++)
-        if (k & (1 << i))
-            u = ancestor[u][i];
-    return u;
-}
- 
-int LCA(int u, int v)
-{
-    if (depth[u] < depth[v])
-        swap(u, v);
-    u = kth_ancestor(u, depth[u] - depth[v]);
-    if (u == v)
-        return u;
-    for (int i = M - 1; i >= 0; i--)
-    {
-        if (ancestor[u][i] != ancestor[v][i])
+        for (auto& v : adj[u])
         {
-            u = ancestor[u][i];
-            v = ancestor[v][i];
+            if (v == p)
+                continue;
+            depth[v] = depth[u] + 1;
+            ancestor[v][0] = u;
+            for (int i = 1; i <= m; i++)
+                ancestor[v][i] = ancestor[ancestor[v][i - 1]][i - 1];
+            dfs(v, u);
         }
     }
-    return ancestor[u][0];
-}
+
+public:
+    LCA(int n)
+    {
+        this->n = n;
+        this->m = __lg(n) + 1;
+        depth = vector<int> (n + 1);
+        ancestor = vector<vector<int>> (n + 1, vector<int> (m + 1));
+        dfs(1, 0);
+    }
+
+    int kth_ancestor(int u, int k)
+    {
+        for (int i = 0; i <= m; i++)
+            if (k & (1 << i))
+                u = ancestor[u][i];
+        return u;
+    }
+
+    int getLCA(int u, int v)
+    {
+        if (depth[u] < depth[v])
+            swap(u, v);
+        u = kth_ancestor(u, depth[u] - depth[v]);
+        if (u == v)
+            return u;
+        for (int i = m; i >= 0; i--)
+        {
+            if (ancestor[u][i] != ancestor[v][i])
+            {
+                u = ancestor[u][i];
+                v = ancestor[v][i];
+            }
+        }
+        return ancestor[u][0];
+    }
+
+    int getDistance(int u, int v)
+    {
+        return depth[u] + depth[v] - 2 * depth[getLCA(u, v)];
+    }
+};
 ```
 ## Flatten the tree
 ```c++
