@@ -38,8 +38,8 @@ int main()
     freopen("output.txt", "w", stdout);
 #endif
     FAST_IO
-    int t = 1;
-    cin >> t;
+    int tc = 1;
+    cin >> tc;
     while (t--)
         testCase();
     return 0;
@@ -94,6 +94,38 @@ public:
     int getSize(int u)
     {
         return sz[u];
+    }
+};
+```
+## Sparse Table
+```c++
+class SparseTable {
+private:
+    int n;
+    vector<vector<int>> table;
+
+    void build(vector<int>& arr)
+    {
+        for (int i = 0; i < n; i++)
+            table[i][0] = arr[i];
+
+        for (int j = 1; (1 << j) <= n; j++)
+            for (int i = 0; i + (1 << j) <= n; i++)
+                table[i][j] = min(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);
+    }
+
+public:
+    SparseTable(vector<int>& arr)
+    {
+        n = arr.size();
+        table = vector<vector<int>> (n + 1, vector<int> (__lg(n) + 1));
+        build(arr);
+    }
+
+    int query(int st, int en)
+    {
+        int j = __lg(en - st + 1);
+        return min(table[st][j], table[en - (1 << j) + 1][j]);
     }
 };
 ```
