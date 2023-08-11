@@ -19,7 +19,7 @@ const int INF = 0x3f3f3f3f;
 const ll LL_INF = 0x3f3f3f3f3f3f3f3f;
 const int dx[] = {0, 0, -1, 1};
 const int dy[] = {-1, 1, 0, 0};
-const int N = 1e5 + 5, M = 1e6 + 5;
+const int N = 1e5 + 5, M = 1e4 + 5;
 
 void testCase()
 {
@@ -34,13 +34,13 @@ void testCase()
 int main()
 {
 #ifdef LOCAL
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+    freopen("input.in", "r", stdin);
+    freopen("output.out", "w", stdout);
 #endif
     FAST_IO
     int tc = 1;
     cin >> tc;
-    while (t--)
+    while (tc--)
         testCase();
     return 0;
 }
@@ -683,35 +683,6 @@ void decompose(int u, int p, int h)
     }
 }
 ```
-## Centroid Decomposition
-```c++
-int n, subTreeCnt[N];
-vector<int> adj[N];
- 
-void dfs(int u, int p)
-{
-    subTreeCnt[u] = 1;
-    for (auto& v : adj[u])
-    {
-        if (v == p)
-            continue;
-        dfs(v, u);
-        subTreeCnt[u] += subTreeCnt[v];
-    }
-}
- 
-int getCentroid(int u, int p)
-{
-    for (auto& v : adj[u])
-    {
-        if (v == p)
-            continue;
-        if (subTreeCnt[v] * 2 > n)
-            return getCentroid(v, u);
-    }
-    return u;
-}
-```
 ## fast power
 ```c++
 ll fastPower(ll base, ll exp, ll mod)
@@ -798,5 +769,21 @@ set<ll> primeFactors(ll n)
     if (n != 1)
         ans.emplace(n);
     return ans;
+}
+```
+## Sieve
+```c++
+int primes[N], spf[N], sz;
+
+void sieve()
+{
+    sz = 0;
+    for (int i = 2; i < N; i++)
+    {
+        if (!spf[i])
+            primes[sz++] = spf[i] = i;
+        for (int j = 0; j < sz && i * primes[j] < N && primes[j] <= spf[i]; j++)
+            spf[i * primes[j]] = primes[j];
+    }
 }
 ```
